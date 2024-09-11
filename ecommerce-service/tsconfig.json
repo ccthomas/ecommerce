@@ -1,0 +1,30 @@
+{
+  "version": "2.4.2",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": [
+      "es5",
+      "es6"
+    ],
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "types": [
+      "jest",
+      "node"
+    ] // Add 'jest' here
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "src/__tests__/**/*.ts",
+  ]
+}
