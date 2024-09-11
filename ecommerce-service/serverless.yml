@@ -1,0 +1,102 @@
+service: ecommerce
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  deploymentMethod: direct
+  region: ${opt:region, env:AWS_DEFAULT_REGION, 'us-east-1'}
+  iam:
+    role: arn:aws:iam::000000000000:role/ecommerce-role
+  deploymentBucket:
+    # S3 Bucket names are unique accross all regions. Append stage & region to ensure uniqueness.
+    name: ecommerce-service-deployment-${self:custom.stage}-${self:provider.region}
+  environment:
+    DB_HOST_SSM_KEY: ${self:custom.database.hostSsmKey}
+    DB_PORT_SSM_KEY: ${self:custom.database.portSsmKey}
+    DB_USER_SSM_KEY: ${self:custom.database.userSsmKey}
+    DB_PASSWORD_SSM_KEY: ${self:custom.database.passwordSsmKey}
+    DB_DATABASE_SSM_KEY: ${self:custom.database.databaseSsmKey}
+    SERVICE: 'ecommerce-service'
+    SERVICE_VERSION: '0.0.0'
+  httpApi:
+    cors: true
+
+plugins:
+  - serverless-offline
+
+custom:
+  stage: ${opt:stage, "dev"}
+
+  serverless-offline:
+    httpPort: ${env:PORT, 4002}
+    lambdaPort: 4003
+    host: '127.0.0.1'
+
+  database:
+    hostSsmKey: /Database/PostgreSQL/host
+    portSsmKey: /Database/PostgreSQL/port
+    userSsmKey: /Database/PostgreSQL/user
+    passwordSsmKey: /Database/PostgreSQL/password
+    databaseSsmKey: /Database/PostgreSQL/database
+
+package:
+  individually: true
+  excludeDevDependencies: true
+  patterns:
+    ## Exclude
+    - '!.github/**'
+    - '!.vscode/**'
+    - '!coverage/**'
+    - '!dist/**'
+    - '!docs/**'
+    - '!src/**'
+    - '!step-functions/**'
+    - '!terraform/**'
+    - '!jest.config.ts'
+    - '!README.md'
+    - '!serverless.yml'
+    - '!tsconfig.json'
+    # Include
+    - 'dist/entities/**'
+    - 'dist/middleware/**'
+    - 'dist/models/**'
+    - 'dist/utils/**'
+
+functions:
+  productGetAll:
+    handler: dist/handlers/ProductGetAll.handler
+    timeout: 6
+    environment:
+      LOG_LEVEL: 'debug'
+    package:
+      patterns:
+        - 'dist/handlers/ProductGetAll.*'
+    events:
+      - httpApi:
+          method: get
+          path: /product
+  
+  productSave:
+    handler: dist/handlers/ProductSave.handler
+    timeout: 6
+    environment:
+      LOG_LEVEL: 'debug'
+    package:
+      patterns:
+        - 'dist/handlers/ProductSave.*'
+    events:
+      - httpApi:
+          method: post
+          path: /product
+
+  xPathNotFound:
+    handler: dist/handlers/XPathNotFound.handler
+    package:
+      patterns:
+        - 'dist/handlers/XPathNotFound.*'
+    events:
+      - httpApi:
+          method: '*'
+          path: '*'

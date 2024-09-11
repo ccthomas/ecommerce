@@ -1,0 +1,60 @@
+services:
+  localstack:
+    image: localstack/localstack
+    container_name: ecommerce-localstack
+    ports:
+      - "4566:4566" # LocalStack gateway port
+      - "4510:4510" # LocalStack metrics port (optional)
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - localstack_data:/var/lib/localstack
+    networks:
+      - my_network
+
+  terraform:
+    image: hashicorp/terraform:latest
+    container_name: terraform
+    volumes:
+      - ./terraform:/workspace
+    working_dir: /workspace
+    networks:
+      - my_network
+    entrypoint: [ "/bin/sh", "-c", "terraform init && terraform apply -auto-approve" ]
+
+  postgres-db:
+    container_name: ecommerce-postgres-db
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:${DB_PORT_INTERNAL}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # Initialize DB
+    networks:
+      - my_network
+
+  ecommerce-service:
+    container_name: ecommerce-service
+    build:
+      context: ./ecommerce-service
+    ports:
+      - ${SERVERLESS_PORT}:${SERVERLESS_PORT}
+    depends_on:
+      - postgres-db
+    networks:
+      - my_network
+    environment:
+      PORT: ${SERVERLESS_PORT}
+      NODE_ENV: development
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  localstack_data:

@@ -10,7 +10,7 @@ This document uses [Mermaid](https://mermaid.js.org/intro/) for diagrams. This t
 - [Requirements](#requirements)
 - [Questions](#questions)
 - [Overview](#overview)
-- [Entity Relational Diagram](#entity-relational-diagram)
+- [Ecommerce Relational Diagram](#ecommerce-relational-diagram)
 - [Services](#services)
   - [Product](#product)
     - [Sequence Diagrams](#sequence-diagrams)
@@ -64,7 +64,7 @@ There are three levels of ownership with this baseline ecommerce application:
    * Shipping tracks the status of an order item to a destination.
    * This area of ownership will be loosely considered as a part of this case study. For time/MVP, this system will only track shipping info at a high level. Additional services could be integrated into this system to collect shipping data, e.g., a Shipping FedEx service meant to integrate with FedEx webhooks to receive updates on shipping.
 
-## Entity Relational Diagram
+## Ecommerce Relational Diagram
 
 ```mermaid
 erDiagram
@@ -134,16 +134,27 @@ sequenceDiagram
 
 #### Contracts
 
+* Product Contract
+
+    ```json
+    {
+        "name": "Chair",
+        "id": "UUID",
+        "createdAt": "YYYY-MM-DDTHH:MM:SS.sssZ",
+        "updatedAt": "YYYY-MM-DDTHH:MM:SS.sssZ",
+        "deletedAt": null or "YYYY-MM-DDTHH:MM:SS.sssZ"
+    }
+    ```
+
 #### APIs
 
 TODO Document other endpoints.
 
 *  POST `/product`
     * Request
-
-        *Using body instead of path param as it will likely want to expand on payload in future. i.e. Using boody to future proof api*
-
         Auditing fields, created & updated at, will be used to verify you have the latest version of the object. Do not modify these fields yourself.
+
+        For creating a new product, you only need to include "name"
 
         Body
         ```json
@@ -151,7 +162,8 @@ TODO Document other endpoints.
             "id": "OPTIONAL - provide to update existing.",
             "name": "REQUIRED",
             "createdAt": "ISO-TIMESTAMP",
-            "updatedAt": "ISO-TIMESTAMP"
+            "updatedAt": "ISO-TIMESTAMP",
+            "deletedAt": "null or ISO-TIMESTAMP"
         }
         ```
     * Response
@@ -162,7 +174,8 @@ TODO Document other endpoints.
             "id": "OPTIONAL - provide to update existing.",
             "name": "REQUIRED",
             "createdAt": "ISO-TIMESTAMP",
-            "updatedAt": "ISO-TIMESTAMP"
+            "updatedAt": "ISO-TIMESTAMP",
+            "deletedAt": "null or ISO-TIMESTAMP"
         }
         ```
 
@@ -190,7 +203,7 @@ TODO Document other endpoints.
         * page: Page number to return.
         * page_size: Size of page to return.
         * name: Filter by name.
-        * sort_by: Field to sort by. ("name")
+        * sort_by: Field to sort by. ("name", "created_at", "updated_at")
         * sort: Sort direction. ("asc" | "desc")
 
     * Response

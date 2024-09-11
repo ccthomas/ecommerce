@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "9025f665-2b05-4f2c-ae9b-c959fec3bfde",
+		"name": "E-Commerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2396637"
+	},
+	"item": [
+		{
+			"name": "Product Endpoints",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverless-api}}/product",
+							"host": [
+								"{{serverless-api}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Min 1",
+									"disabled": true
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Min 1",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "name",
+									"description": "\"name\", \"created_at\", or \"updated_at\"",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "asc",
+									"description": "\"asc\" or \"desc\"",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomProduct}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverless-api}}/product",
+							"host": [
+								"{{serverless-api}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chair 2\",\n    \"id\": \"da6ff863-a2e8-4bda-84e5-901dad6b9620\",\n    \"createdAt\": \"2024-09-11T21:00:10.537Z\",\n    \"updatedAt\": \"2024-09-11T21:00:10.537Z\",\n    \"deletedAt\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverless-api}}/product",
+							"host": [
+								"{{serverless-api}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Path Not Found",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "serverless-api",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

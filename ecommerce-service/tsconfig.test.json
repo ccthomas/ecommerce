@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "jest",
+      "node"
+    ] // Add 'jest' here
+  },
+  "include": [
+    "src/__tests__/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}

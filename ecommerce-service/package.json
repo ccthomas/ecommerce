@@ -1,0 +1,57 @@
+{
+  "name": "@ccthomas/ecommerece-service",
+  "version": "0.0.0",
+  "description": "Baseline product and order management system leveraging AWS Suite.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccthomas/ecommerce.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "./node_modules/eslint/bin/eslint.js ./src --fix",
+    "deploy": "npm run build && ./node_modules/serverless/bin/serverless.js deploy --stage prod",
+    "deploy:func": "npm run build && ./node_modules/serverless/bin/serverless.js deploy --stage prod function -f",
+    "offline": "npm run build && serverless offline --stage offline",
+    "test:unit": "./node_modules/jest/bin/jest.js --coverage --testMatch='**/*.unit.test.ts'",
+    "test:integration": "./node_modules/jest/bin/jest.js --testMatch='**/*.integration.test.ts'"
+  },
+  "author": "ccthomas",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ccthomas/ecommerce/issues"
+  },
+  "homepage": "https://github.com/ccthomas/ecommerce/issues#readme",
+  "devDependencies": {
+    "@aws-sdk/client-ssm": "^3.554.0",
+    "@eslint/js": "^9.0.0",
+    "@jest/globals": "^29.7.0",
+    "@types/aws-lambda": "^8.10.114",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^18.16.2",
+    "@types/pg": "^8.11.5",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1359.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "jest": "^29.7.0",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.8.0",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.6.0"
+  },
+  "dependencies": {
+    "@middy/core": "^v4.7.0",
+    "joi": "^17.12.3",
+    "pg": "^8.11.5",
+    "pino": "^8.19.0",
+    "uuid": "^9.0.1"
+  }
+}
