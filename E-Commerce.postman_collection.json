@@ -15,9 +15,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{serverless-api}}/product",
+							"raw": "{{serverlessApi}}/product",
 							"host": [
-								"{{serverless-api}}"
+								"{{serverlessApi}}"
 							],
 							"path": [
 								"product"
@@ -37,7 +37,7 @@
 								},
 								{
 									"key": "name",
-									"value": null,
+									"value": "Ch",
 									"disabled": true
 								},
 								{
@@ -72,9 +72,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{serverless-api}}/product",
+							"raw": "{{serverlessApi}}/product",
 							"host": [
-								"{{serverless-api}}"
+								"{{serverlessApi}}"
 							],
 							"path": [
 								"product"
@@ -90,7 +90,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Chair 2\",\n    \"id\": \"da6ff863-a2e8-4bda-84e5-901dad6b9620\",\n    \"createdAt\": \"2024-09-11T21:00:10.537Z\",\n    \"updatedAt\": \"2024-09-11T21:00:10.537Z\",\n    \"deletedAt\": null\n}",
+							"raw": "{\n    \"name\": \"Table 3\",\n    \"updatedAt\": \"2024-09-11T22:02:00.967Z\",\n    \"id\": \"aaba6dfa-06a2-4a62-b651-10a3a35df887\",\n    \"createdAt\": \"2024-09-11T22:01:52.973Z\",\n    \"deletedAt\": null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,12 +98,48 @@
 							}
 						},
 						"url": {
-							"raw": "{{serverless-api}}/product",
+							"raw": "{{serverlessApi}}/product",
 							"host": [
-								"{{serverless-api}}"
+								"{{serverlessApi}}"
 							],
 							"path": [
 								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverlessApi}}/product/{{productId}}",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{serverlessApi}}/product/{{productId}}",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"{{productId}}"
 							]
 						}
 					},
@@ -115,7 +151,18 @@
 			"name": "Path Not Found",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{serverlessApi}}/path/not/found",
+					"host": [
+						"{{serverlessApi}}"
+					],
+					"path": [
+						"path",
+						"not",
+						"found"
+					]
+				}
 			},
 			"response": []
 		}
@@ -144,7 +191,12 @@
 	],
 	"variable": [
 		{
-			"key": "serverless-api",
+			"key": "serverlessApi",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productId",
 			"value": "",
 			"type": "string"
 		}

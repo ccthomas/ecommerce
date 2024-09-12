@@ -7,6 +7,7 @@
     "editor.insertSpaces": true,
     "editor.formatOnSave": true,
     "eslint.workingDirectories": [
-        "ecommerce-service"
+        "ecommerce-react-app",
+        "ecommerce-service",
     ]
 }

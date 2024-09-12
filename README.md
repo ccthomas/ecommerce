@@ -40,7 +40,13 @@ Docker containers must be run in a specfic order. Some services, like terraform,
 1. Run ECommerce Service
 
     ```bash
-    docker compose up ecommerce-service
+    docker compose up -d ecommerce-service
+    ```
+
+1. Run React App
+
+    ```bash
+    docker compose up -d react-app
     ```
 
 ### Use Application

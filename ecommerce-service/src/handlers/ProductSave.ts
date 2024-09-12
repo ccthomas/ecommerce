@@ -1,6 +1,6 @@
 import middy from '@middy/core';
 import { v4 as uuid } from 'uuid';
-import { Client } from 'pg';
+import { Client, DatabaseError, QueryResult } from 'pg';
 import Joi from 'joi';
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { getLogger } from '../utils/LoggerUtil';
@@ -58,7 +58,9 @@ const lambdaHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRes
   const client: Client = await connectPsqlClient();
 
   getLogger().debug({ product }, 'Save product');
-  const result = await client.query(`
+  let result: QueryResult;
+  try {
+    result = await client.query(`
     INSERT INTO product.product (
       id,
       name,
@@ -79,13 +81,25 @@ const lambdaHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRes
       product.updated_at = $6
     RETURNING id;
     `, [
-    product.id,
-    product.name,
-    product.createdAt,
-    product.updatedAt,
-    product.deletedAt,
-    auditUpdateAt,
-  ]);
+      product.id,
+      product.name,
+      product.createdAt,
+      product.updatedAt,
+      product.deletedAt,
+      auditUpdateAt,
+    ]);
+  } catch (e) {
+    if (e instanceof DatabaseError) {
+      if (e.constraint === 'product_name_key') {
+        throw new ApiError({
+          statusCode: 400,
+          errorCode: 'NAME_TAKEN',
+          message: 'Product name already taken',
+        });
+      }
+      throw e;
+    }
+  }
 
   if (result.rowCount === 0) {
     throw new ApiError({

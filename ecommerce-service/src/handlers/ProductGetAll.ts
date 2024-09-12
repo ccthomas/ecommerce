@@ -27,7 +27,7 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
   const pageSize = parseInt(event.queryStringParameters?.page_size || '10', 10);
   const nameFilter = event.queryStringParameters?.name || null;
   const sortBy = event.queryStringParameters?.sort_by || 'name';
-  const sortOrder = event.queryStringParameters?.sort === 'desc' ? 'DESC' : 'ASC';
+  const sortOrder = event.queryStringParameters?.sort.toLocaleLowerCase() === 'desc' ? 'DESC' : 'ASC';
 
   const offset = (page - 1) * pageSize;
 
@@ -47,12 +47,19 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
       deleted_at AS "deletedAt"
     FROM product.product
     WHERE deleted_at IS NULL
-      AND ($1::text IS NULL OR name ILIKE $1::text)
-    ORDER BY $2
-    LIMIT $3 OFFSET $4;
+      AND ($1::text IS NULL OR name ILIKE '%' || $1::text || '%')
+    ORDER BY 
+        (case WHEN $2 = 'name' AND $3 = 'ASC' THEN name end) ASC,
+        (case WHEN $2 = 'name' AND $3 = 'DESC' THEN name end) DESC,
+        (case WHEN $2 = 'created_at' AND $3 = 'ASC' THEN created_at end) ASC,
+        (case WHEN $2 = 'created_at' AND $3 = 'DESC' THEN created_at end) DESC,
+        (case WHEN $2 = 'updated_at' AND $3 = 'ASC' THEN updated_at end) ASC,
+        (case WHEN $2 = 'updated_at' AND $3 = 'DESC' THEN updated_at end) DESC
+    LIMIT $4 OFFSET $5;
   `, [
     nameFilter,
-    `${sortBy} ${sortOrder}`,
+    sortBy,
+    sortOrder,
     pageSize,
     offset,
   ]);
