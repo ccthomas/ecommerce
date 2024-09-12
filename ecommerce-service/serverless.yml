@@ -65,6 +65,19 @@ package:
     - 'dist/utils/**'
 
 functions:
+  productDelete:
+    handler: dist/handlers/ProductDelete.handler
+    timeout: 6
+    environment:
+      LOG_LEVEL: 'debug'
+    package:
+      patterns:
+        - 'dist/handlers/ProductDelete.*'
+    events:
+      - httpApi:
+          method: delete
+          path: /product/{productId}
+  
   productGetAll:
     handler: dist/handlers/ProductGetAll.handler
     timeout: 6
@@ -77,6 +90,19 @@ functions:
       - httpApi:
           method: get
           path: /product
+  
+  productGetById:
+    handler: dist/handlers/ProductGetById.handler
+    timeout: 6
+    environment:
+      LOG_LEVEL: 'debug'
+    package:
+      patterns:
+        - 'dist/handlers/ProductGetById.*'
+    events:
+      - httpApi:
+          method: get
+          path: /product/{productId}
   
   productSave:
     handler: dist/handlers/ProductSave.handler

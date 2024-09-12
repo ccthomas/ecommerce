@@ -1,0 +1,171 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Typography,
+  Box,
+  Paper,
+  TextField,
+  Button,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Container,
+} from '@mui/material';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { useProductContext } from '../contexts/ProductContext';
+import DynamicAppBar from '../components/DynamicAppBar';
+import routeConfigs from '../RoutesConfig';
+
+/**
+ * Flaw with page.
+ *
+ * Every character typed in the search bar reloads the page.
+ * Instead of handling each change in the text field, we should
+ * use a form that grabs the value of the text field on submit.
+ */
+
+interface ProductFormProps {
+  // This prop can be used to prepopulate the form when editing
+  product?: { name: string; imageUrl?: string };
+}
+
+const ProductForm: React.FC<ProductFormProps> = () => {
+  const [params] = useSearchParams(); // Use for editing an existing product
+  const id = params.get('id');
+  const navigate = useNavigate();
+  const {
+    product,
+    fetchProductById,
+    saveProduct,
+    loading,
+    error,
+  } = useProductContext();
+
+  const [name, setName] = useState<string>(product?.name || '');
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  console.log(image);
+
+  useEffect(() => {
+    if (id) {
+      // Fetch the product details if in edit mode
+      fetchProductById(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    setName(product?.name || '');
+  }, [product]);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async () => {
+    const isSuccess = await saveProduct({
+      ...product,
+      name,
+    });
+
+    if (isSuccess) {
+      setShowSnackbar(true);
+      navigate('/products');
+    } else {
+      setShowSnackbar(false);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setShowSnackbar(false);
+  };
+
+  return (
+    <>
+      <DynamicAppBar
+        title='E-Commerce'
+        items={[
+          {
+            label: 'Products',
+            route: routeConfigs.products.path,
+          },
+        ]}
+      />
+      <Container>
+        <Box my={4}>
+          <Paper elevation={3} sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              {id ? 'Edit Product' : 'Create Product'}
+            </Typography>
+
+            {loading && <CircularProgress />}
+            {error && (
+              <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                <Alert onClose={handleSnackbarClose} severity="error">
+                  {error}
+                </Alert>
+              </Snackbar>
+            )}
+
+            {!loading && (
+              <Box component="form" noValidate autoComplete="off" mt={2}>
+                <TextField
+                  fullWidth
+                  label="Product Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  sx={{ mb: 2 }}
+                />
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="upload-image"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="upload-image">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    component="span"
+                    startIcon={<PhotoCameraIcon />}
+                    sx={{ mb: 2 }}
+                  >
+                    Upload Image
+                  </Button>
+                </label>
+
+                {imagePreview && (
+                  <Box
+                    component="img"
+                    src={imagePreview}
+                    alt="Product Preview"
+                    sx={{
+                      width: 200, height: 200, objectFit: 'cover', mb: 2,
+                    }}
+                  />
+                )}
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                >
+                  {id ? 'Update Product' : 'Create Product'}
+                </Button>
+              </Box>
+            )}
+          </Paper>
+        </Box>
+      </Container>
+    </>
+  );
+};
+
+export default ProductForm;

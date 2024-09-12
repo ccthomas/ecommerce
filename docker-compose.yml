@@ -51,6 +51,20 @@ services:
       PORT: ${SERVERLESS_PORT}
       NODE_ENV: development
 
+  react-app:
+    container_name: ecommerce-react-app
+    build:
+      context: ./ecommerce-react-app
+      args:
+        REACT_APP_PORT: ${REACT_APP_PORT}
+        SERVICE_API: ${SERVERLESS_API}
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - ecommerce-service
+
 networks:
   my_network:
     driver: bridge
