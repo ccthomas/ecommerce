@@ -1,0 +1,9 @@
+xPathNotFound:
+  handler: dist/handlers/XPathNotFound.handler
+  package:
+    patterns:
+      - 'dist/handlers/XPathNotFound.*'
+  events:
+    - httpApi:
+        method: '*'
+        path: '*'

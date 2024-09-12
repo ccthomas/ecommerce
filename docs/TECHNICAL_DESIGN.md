@@ -71,6 +71,10 @@ There are three levels of ownership with this baseline ecommerce application:
         * SKU
         * Quality of Item (for used items)
         * Description
+* Inventory Notees
+    * Quanity was implemented as a single field. It should be two fields. Actual quantity in the system, and quanity available to sell.
+        * If a customer is going through checkout, we should subtract from quantity available, and set a scheduled job to add it back if the item is not purchased in X time.
+        * When an item is reserved, and the avilable quantity drops to zero. Then product should bee updated with new loweest price.
 
 ```mermaid
 erDiagram
@@ -90,6 +94,7 @@ erDiagram
         string product_id
         numeric price
         numeric quantity
+        numeric quantity_available
     }
 
     ORDER {

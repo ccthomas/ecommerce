@@ -1,0 +1,64 @@
+getPresignedUrl:
+  handler: dist/handlers/GetPresignedUrl.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/GetPresignedUrl.*'
+  events:
+    - httpApi:
+        method: get
+        path: /product/signed-url
+
+productDelete:
+  handler: dist/handlers/product/ProductDelete.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/product/ProductDelete.*'
+  events:
+    - httpApi:
+        method: delete
+        path: /product/{productId}
+
+productGetAll:
+  handler: dist/handlers/product/ProductGetAll.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/product/ProductGetAll.*'
+  events:
+    - httpApi:
+        method: get
+        path: /product
+
+productGetById:
+  handler: dist/handlers/product/ProductGetById.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/product/ProductGetById.*'
+  events:
+    - httpApi:
+        method: get
+        path: /product/{productId}
+
+productSave:
+  handler: dist/handlers/product/ProductSave.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/product/ProductSave.*'
+  events:
+    - httpApi:
+        method: post
+        path: /product

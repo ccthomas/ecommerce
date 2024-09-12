@@ -3,13 +3,13 @@ import { v4 as uuid } from 'uuid';
 import { Client, DatabaseError, QueryResult } from 'pg';
 import Joi from 'joi';
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { getLogger } from '../utils/LoggerUtil';
-import { IProduct } from '../models/IProduct';
-import { configureLogger } from '../middleware/LoggerMiddleware';
-import { connectPsqlClient } from '../utils/PostgresUtil';
-import { validateApiEvent } from '../middleware/ValidateMiddleware';
-import { httpError } from '../middleware/ApiMiddleware';
-import { ApiError } from '../models/error/ApiError';
+import { getLogger } from '../../utils/LoggerUtil';
+import { IProduct } from '../../models/IProduct';
+import { configureLogger } from '../../middleware/LoggerMiddleware';
+import { connectPsqlClient } from '../../utils/PostgresUtil';
+import { validateApiEvent } from '../../middleware/ValidateMiddleware';
+import { httpError } from '../../middleware/ApiMiddleware';
+import { ApiError } from '../../models/error/ApiError';
 
 type IProductDTO = IProduct & {
   createdAt?: Date | string;

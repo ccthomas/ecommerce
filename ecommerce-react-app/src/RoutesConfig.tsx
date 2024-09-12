@@ -1,4 +1,5 @@
 import HomePage from './pages/HomePage';
+import InventoryPage from './pages/InventoryPage';
 import ProductEditPage from './pages/ProductEditPage';
 import ProductPage from './pages/ProductPage';
 
@@ -22,6 +23,10 @@ const routeConfigs: Record<string, RouteConfig> = {
   productsEdit: {
     path: '/products/edit',
     element: <ProductEditPage />,
+  },
+  inventory: {
+    path: '/products/inventory/:productId',
+    element: <InventoryPage />,
   },
 };
 

@@ -1,0 +1,25 @@
+inventoryGetByProductId:
+  handler: dist/handlers/inventory/InventoryGetByProductId.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/inventory/InventoryGetByProductId.*'
+  events:
+    - httpApi:
+        method: get
+        path: /product/inventory/{productId}
+
+inventorySave:
+  handler: dist/handlers/inventory/InventorySave.handler
+  timeout: 6
+  environment:
+    LOG_LEVEL: 'debug'
+  package:
+    patterns:
+      - 'dist/handlers/inventory/InventorySave.*'
+  events:
+    - httpApi:
+        method: post
+        path: /product/inventory
