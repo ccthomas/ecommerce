@@ -1,4 +1,4 @@
-import { Client } from 'pg';
+import { Client, types } from 'pg';
 import { getLogger } from './LoggerUtil';
 import { getParameters, reduceParameters } from './SsmUtil';
 
@@ -47,6 +47,15 @@ export const connectPsqlClient = async (): Promise<Client> => {
 
     getLogger().debug('connect client.');
     client.connect();
+
+    // Convert Numeric to float. Instead of default behavior of string.
+    // https://github.com/brianc/node-postgres/issues/811
+    types.setTypeParser(1700, (val) => {
+      if (val === null) {
+        return null;
+      }
+      return parseFloat(val);
+    });
   }
 
   getLogger().debug('Return pool with connection.');

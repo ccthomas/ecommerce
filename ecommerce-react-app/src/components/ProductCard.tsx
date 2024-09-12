@@ -25,7 +25,7 @@ const ProductCard = ({
   id,
   title,
   imageUrl,
-  priceLowest = '$XXX.YY',
+  priceLowest,
   canEdit = false,
   canDelete = false,
   onDeleteClick = () => { },
@@ -33,7 +33,11 @@ const ProductCard = ({
   const navigate = useNavigate();
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
+      <CardActionArea onClick={() => {
+        // hacky quick solution
+        const to = routeConfigs.inventory.path.replace(':productId', id);
+        navigate(to);
+      }}>
         <CardMedia
           component="img"
           height="140"
@@ -47,7 +51,7 @@ const ProductCard = ({
       </CardActionArea>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography>
-          From {priceLowest}
+          {priceLowest !== null ? `From $${priceLowest}` : 'Price Unknown'}
         </Typography>
         <Box>
           {canEdit && (

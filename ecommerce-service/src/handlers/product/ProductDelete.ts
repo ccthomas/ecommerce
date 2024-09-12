@@ -2,11 +2,11 @@ import middy from '@middy/core';
 import { Client } from 'pg';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import Joi from 'joi';
-import { configureLogger } from '../middleware/LoggerMiddleware';
-import { getLogger } from '../utils/LoggerUtil';
-import { connectPsqlClient } from '../utils/PostgresUtil';
-import { httpError } from '../middleware/ApiMiddleware';
-import { validateApiEvent } from '../middleware/ValidateMiddleware';
+import { configureLogger } from '../../middleware/LoggerMiddleware';
+import { getLogger } from '../../utils/LoggerUtil';
+import { connectPsqlClient } from '../../utils/PostgresUtil';
+import { httpError } from '../../middleware/ApiMiddleware';
+import { validateApiEvent } from '../../middleware/ValidateMiddleware';
 
 const pathParamSchema = Joi.object({
   productId: Joi.string().uuid().required(),

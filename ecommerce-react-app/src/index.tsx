@@ -9,13 +9,16 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { ProductProvider } from './contexts/ProductContext';
+import { InventoryProvider } from './contexts/InventoryContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
   <ProductProvider>
-    <App />
+    <InventoryProvider>
+      <App />
+    </InventoryProvider>
   </ProductProvider>,
 );
 

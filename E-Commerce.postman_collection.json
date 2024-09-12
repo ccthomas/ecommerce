@@ -58,6 +58,55 @@
 					"response": []
 				},
 				{
+					"name": "Get Products By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverlessApi}}/product/{{productId}}",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"{{productId}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Min 1",
+									"disabled": true
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Min 1",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Ch",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "name",
+									"description": "\"name\", \"created_at\", or \"updated_at\"",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "asc",
+									"description": "\"asc\" or \"desc\"",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Product",
 					"request": {
 						"method": "POST",
@@ -110,9 +159,9 @@
 					"response": []
 				},
 				{
-					"name": "Get Product By Id",
+					"name": "Delete Product",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"url": {
 							"raw": "{{serverlessApi}}/product/{{productId}}",
@@ -128,18 +177,159 @@
 					"response": []
 				},
 				{
-					"name": "Delete Product",
+					"name": "Get Product Signed Url",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{serverlessApi}}/product/{{productId}}",
+							"raw": "{{serverlessApi}}/product/signed-url",
 							"host": [
 								"{{serverlessApi}}"
 							],
 							"path": [
 								"product",
+								"signed-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put S3 Object",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": ""
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:4566/ecommerce-product-images-offline-us-east-1/985328fd-e905-46ff-bae7-654397527eab?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20240912%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240912T052732Z&X-Amz-Expires=3600&X-Amz-Signature=18a6c71730cddab60cfe50b25ba88bea80969bb235feb679d20ade7bde3283b9&X-Amz-SignedHeaders=host&x-id=PutObject",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "4566",
+							"path": [
+								"ecommerce-product-images-offline-us-east-1",
+								"985328fd-e905-46ff-bae7-654397527eab"
+							],
+							"query": [
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "AWS4-HMAC-SHA256"
+								},
+								{
+									"key": "X-Amz-Content-Sha256",
+									"value": "UNSIGNED-PAYLOAD"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "test%2F20240912%2Fus-east-1%2Fs3%2Faws4_request"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "20240912T052732Z"
+								},
+								{
+									"key": "X-Amz-Expires",
+									"value": "3600"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "18a6c71730cddab60cfe50b25ba88bea80969bb235feb679d20ade7bde3283b9"
+								},
+								{
+									"key": "X-Amz-SignedHeaders",
+									"value": "host"
+								},
+								{
+									"key": "x-id",
+									"value": "PutObject"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "Get Inventory by Product Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverlessApi}}/product/inventory/{{productId}}",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"inventory",
 								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Inventory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"{{productId}}\",\n    \"price\": 15.34,\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverlessApi}}/product/inventory",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"inventory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Inventory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"5f155ce2-41d2-4f58-82f4-9041482096c1\",\n    \"productId\": \"c90df71f-de45-4ef2-b2f7-a0dc7aecdc60\",\n    \"price\": 20.34,\n    \"quantity\": 1,\n    \"createdAt\": \"2024-09-12T17:54:34.470Z\",\n    \"updatedAt\": \"2024-09-12T17:54:34.470Z\",\n    \"deletedAt\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverlessApi}}/product/inventory",
+							"host": [
+								"{{serverlessApi}}"
+							],
+							"path": [
+								"product",
+								"inventory"
 							]
 						}
 					},

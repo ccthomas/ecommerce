@@ -10,3 +10,14 @@ CREATE TABLE product.product (
     deleted_at TIMESTAMP WITH TIME ZONE,
     UNIQUE (name)
 );
+
+CREATE TABLE product.inventory (
+    id VARCHAR(36) PRIMARY KEY,                   
+    product_id VARCHAR(36) NOT NULL,               
+    price NUMERIC(10, 2),                           
+    quantity INTEGER,                           
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    FOREIGN KEY (product_id) REFERENCES product.product(id) ON DELETE CASCADE
+);

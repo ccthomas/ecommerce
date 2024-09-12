@@ -263,7 +263,7 @@ const ProductTable: React.FC = () => {
                         canEdit={canEdit}
                         canDelete={canDelete}
                         onDeleteClick={handleDeleteClick} // Pass the click handler
-                        priceLowest={'$XXX.YY'}
+                        priceLowest={product.priceLowest}
                       />
                     </Grid>
                   ))
