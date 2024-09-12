@@ -1,8 +1,8 @@
 import middy from '@middy/core';
 import { getLogger } from '../utils/LoggerUtil';
-import { ApiError } from '../models/ApiError';
-import { IApiErrorMessage } from '../models/IApiErrorMessage';
-import { InternalServerApiError } from '../models/InternalServerApiError';
+import { ApiError } from '../models/error/ApiError';
+import { IApiErrorMessage } from '../models/error/IApiErrorMessage';
+import { InternalServerApiError } from '../models/error/InternalServerApiError';
 
 export const httpError = (): middy.MiddlewareObj<unknown> => ({
   onError: (handler) => {

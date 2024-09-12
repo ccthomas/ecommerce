@@ -48,7 +48,7 @@ const ProductTable: React.FC = () => {
     error,
     loadMoreProducts,
   } = useProductContext();
-  const [permissions] = useState<string[]>(['product::edit', 'product::delete']); // Add product::edit for testing
+  const [permissions] = useState<string[]>(['product::edit', 'product::delete']); // Remove permissions for testing
   const [pagination, setPagination] = useState<PaginationState>({ page: 1, rowsPerPage: 10 });
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -116,7 +116,6 @@ const ProductTable: React.FC = () => {
   return (
     <>
       <DynamicAppBar
-        title='E-Commerce'
         items={[
           {
             label: 'Products',
@@ -129,22 +128,52 @@ const ProductTable: React.FC = () => {
           {/* Search and Sorting Paper */}
           <Paper elevation={3} sx={{ padding: 2, mb: 4 }}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
+              {/* Create New Product Button */}
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ height: '56px', alignSelf: 'center' }} // Adjust height to match other elements
+                sx={{
+                  height: '56px',
+                  minWidth: '150px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                    boxShadow: '0 6px 8px rgba(0, 0, 0, 0.2)',
+                  },
+                }}
                 onClick={() => { navigate(routeConfigs.productsEdit.path); }}
               >
                 Create New Product
               </Button>
+
+              {/* Search TextField */}
               <TextField
                 label="Search"
                 variant="outlined"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                sx={{ mr: 2, flex: 1 }}
+                sx={{
+                  ml: 2,
+                  mr: 2,
+                  flex: 1,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                    '& fieldset': {
+                      borderColor: 'divider',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                  },
+                }}
               />
-              <FormControl sx={{ minWidth: 120 }}>
+
+              {/* Sort By FormControl */}
+              <FormControl sx={{ minWidth: 160 }}>
                 <InputLabel id="sort-by-select-label">Sort By</InputLabel>
                 <Select
                   labelId="sort-by-select-label"
@@ -152,12 +181,29 @@ const ProductTable: React.FC = () => {
                   value={sortBy}
                   onChange={handleSortByChange}
                   label="Sort By"
+                  sx={{
+                    borderRadius: '8px',
+                    '& .MuiSelect-select': {
+                      paddingY: '16px', // Adjust padding for better alignment
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'divider',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                    },
+                  }}
                 >
                   <MenuItem value="name">Name</MenuItem>
                   <MenuItem value="updated_at">Updated</MenuItem>
                 </Select>
               </FormControl>
-              <FormControl sx={{ minWidth: 120 }}>
+
+              {/* Sort Direction FormControl */}
+              <FormControl sx={{ minWidth: 160 }}>
                 <InputLabel id="sort-select-label">Direction</InputLabel>
                 <Select
                   labelId="sort-select-label"
@@ -165,6 +211,21 @@ const ProductTable: React.FC = () => {
                   value={sortOrder}
                   onChange={handleSortChange}
                   label="Sort Direction"
+                  sx={{
+                    borderRadius: '8px',
+                    '& .MuiSelect-select': {
+                      paddingY: '16px', // Adjust padding for better alignment
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'divider',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.main',
+                    },
+                  }}
                 >
                   <MenuItem value="asc">Ascending</MenuItem>
                   <MenuItem value="desc">Descending</MenuItem>
@@ -194,7 +255,7 @@ const ProductTable: React.FC = () => {
               <Grid container spacing={4}>
                 {products.length > 0 ? (
                   products.map((product, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Grid item xs={12} sm={4} md={3} key={index}>
                       <ProductCard
                         id={product.id}
                         title={product.name}
@@ -202,13 +263,16 @@ const ProductTable: React.FC = () => {
                         canEdit={canEdit}
                         canDelete={canDelete}
                         onDeleteClick={handleDeleteClick} // Pass the click handler
+                        priceLowest={'$XXX.YY'}
                       />
                     </Grid>
                   ))
                 ) : (
-                  <Typography variant="body1" align="center">
-                    No products found.
-                  </Typography>
+                  <Grid item xs={12} sm={12} md={12} key={0}>
+                    <Typography variant="body1" align="center">
+                      No products found.
+                    </Typography>
+                  </Grid>
                 )}
               </Grid>
             )}
@@ -222,6 +286,8 @@ const ProductTable: React.FC = () => {
           </Paper>
 
           {/* Delete Confirmation Dialog */}
+          {/* selected id is not being tracked at this time,
+          so we cannot delete the selected prodouct. */}
           <Dialog
             open={openDeleteDialog}
             onClose={handleCloseDialog}

@@ -15,19 +15,21 @@ export type ProductCardProps = {
   id: string,
   title: string;
   imageUrl: string | null;
+  priceLowest: string | null;
   canEdit?: boolean;
   canDelete?: boolean;
   onDeleteClick?: () => void;
 };
 
-export default function ProductCard({
+const ProductCard = ({
   id,
   title,
   imageUrl,
+  priceLowest = '$XXX.YY',
   canEdit = false,
   canDelete = false,
   onDeleteClick = () => { },
-}: ProductCardProps) {
+}: ProductCardProps) => {
   const navigate = useNavigate();
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -45,7 +47,7 @@ export default function ProductCard({
       </CardActionArea>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography>
-          From $XXX.YY
+          From {priceLowest}
         </Typography>
         <Box>
           {canEdit && (
@@ -64,4 +66,6 @@ export default function ProductCard({
       </CardActions>
     </Card>
   );
-}
+};
+
+export default ProductCard;

@@ -4,6 +4,9 @@ import { getParameters, reduceParameters } from './SsmUtil';
 
 let client: Client;
 
+/**
+ * If using RDS, usee RDS Signer instead of storing password in SSM.
+ */
 export const connectPsqlClient = async (): Promise<Client> => {
   getLogger().debug('Connect PSQL Client.');
   if (client === undefined) {

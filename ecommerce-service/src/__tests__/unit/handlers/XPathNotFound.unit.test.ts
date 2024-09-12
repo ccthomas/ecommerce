@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 import { expect, describe, it } from '@jest/globals';
 import { fail } from 'assert';
 import { lambdaHandler } from '../../../handlers/XPathNotFound';
-import { ApiError } from '../../../models/ApiError';
+import { ApiError } from '../../../models/error/ApiError';
 
 describe('Hello World Handler', () => {
   it('should return a 404 status code and a message', async () => {

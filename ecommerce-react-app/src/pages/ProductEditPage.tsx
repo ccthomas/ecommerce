@@ -24,15 +24,11 @@ import routeConfigs from '../RoutesConfig';
  * use a form that grabs the value of the text field on submit.
  */
 
-interface ProductFormProps {
-  // This prop can be used to prepopulate the form when editing
-  product?: { name: string; imageUrl?: string };
-}
-
-const ProductForm: React.FC<ProductFormProps> = () => {
+const ProductForm = () => {
+  const navigate = useNavigate();
   const [params] = useSearchParams(); // Use for editing an existing product
   const id = params.get('id');
-  const navigate = useNavigate();
+
   const {
     product,
     fetchProductById,
@@ -49,7 +45,6 @@ const ProductForm: React.FC<ProductFormProps> = () => {
 
   useEffect(() => {
     if (id) {
-      // Fetch the product details if in edit mode
       fetchProductById(id);
     }
   }, [id]);
@@ -101,7 +96,6 @@ const ProductForm: React.FC<ProductFormProps> = () => {
   return (
     <>
       <DynamicAppBar
-        title='E-Commerce'
         items={[
           {
             label: 'Products',

@@ -9,7 +9,7 @@ import { configureLogger } from '../middleware/LoggerMiddleware';
 import { connectPsqlClient } from '../utils/PostgresUtil';
 import { validateApiEvent } from '../middleware/ValidateMiddleware';
 import { httpError } from '../middleware/ApiMiddleware';
-import { ApiError } from '../models/ApiError';
+import { ApiError } from '../models/error/ApiError';
 
 type IProductDTO = IProduct & {
   createdAt?: Date | string;

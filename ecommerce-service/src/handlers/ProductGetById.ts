@@ -8,7 +8,7 @@ import { getLogger } from '../utils/LoggerUtil';
 import { connectPsqlClient } from '../utils/PostgresUtil';
 import { httpError } from '../middleware/ApiMiddleware';
 import { validateApiEvent } from '../middleware/ValidateMiddleware';
-import { ApiError } from '../models/ApiError';
+import { ApiError } from '../models/error/ApiError';
 import { getObjectUrl } from '../utils/S3Util';
 
 const pathParamSchema = Joi.object({

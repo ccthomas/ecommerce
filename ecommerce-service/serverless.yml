@@ -20,6 +20,13 @@ provider:
     DB_DATABASE_SSM_KEY: ${self:custom.database.databaseSsmKey}
     SERVICE: 'ecommerce-service'
     SERVICE_VERSION: '0.0.0'
+    STAGE: ${self:custom.stage}
+    # Local Environment
+    LOCALSTACK_CONTAINER_NAME: ${env:LOCALSTACK_CONTAINER_NAME}
+    S3_PRODUCT_IMAGE_BUCKET_NAME: ${env:S3_PRODUCT_IMAGE_BUCKET_NAME}
+    S3_URL: ${env:S3_URL}
+    S3_ENDPOINT: ${env:S3_ENDPOINT}
+    SSM_ENDPOINT: ${env:SSM_ENDPOINT}
   httpApi:
     cors: true
 
@@ -27,7 +34,7 @@ plugins:
   - serverless-offline
 
 custom:
-  stage: ${opt:stage, "dev"}
+  stage: ${opt:stage, "offline"}
 
   serverless-offline:
     httpPort: ${env:PORT, 4002}
