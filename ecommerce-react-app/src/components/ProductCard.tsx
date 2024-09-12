@@ -10,12 +10,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import routeConfigs from '../RoutesConfig';
+import { formatPrice } from '../utils/currencyUtil';
 
 export type ProductCardProps = {
   id: string,
   title: string;
   imageUrl: string | null;
-  priceLowest: string | null;
+  priceLowest: number | null;
   canEdit?: boolean;
   canDelete?: boolean;
   onDeleteClick?: () => void;
@@ -31,6 +32,7 @@ const ProductCard = ({
   onDeleteClick = () => { },
 }: ProductCardProps) => {
   const navigate = useNavigate();
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea onClick={() => {
@@ -51,11 +53,11 @@ const ProductCard = ({
       </CardActionArea>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography>
-          {priceLowest !== null ? `From $${priceLowest}` : 'Price Unknown'}
+          {priceLowest === null ? 'No Inventory' : `From ${formatPrice(priceLowest)}`}
         </Typography>
         <Box>
           {canEdit && (
-            <IconButton aria-label="delete" size="small" onClick={() => {
+            <IconButton aria-label="edit" size="small" onClick={() => {
               navigate(`${routeConfigs.productsEdit.path}?id=${id}`);
             }}>
               <EditIcon fontSize="small" />

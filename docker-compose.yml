@@ -38,7 +38,7 @@ services:
     networks:
       - my_network
 
-  ecommerce-service:
+  service:
     container_name: ecommerce-service
     build:
       context: ./ecommerce-service
@@ -63,13 +63,13 @@ services:
       context: ./ecommerce-react-app
       args:
         REACT_APP_PORT: ${REACT_APP_PORT}
-        SERVICE_API: ${SERVERLESS_API}
+        REACT_APP_SERVICE_API: ${SERVERLESS_API}
     ports:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
     environment:
       NODE_ENV: production
     depends_on:
-      - ecommerce-service
+      - service
 
 networks:
   my_network:
