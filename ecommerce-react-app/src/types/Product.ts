@@ -3,7 +3,7 @@ export type Product = {
   name: string;
   imageObjectKey: string | null,
   imageUrl: string | null;
-  priceLowest: string | null;
+  priceLowest: number | null;
 
   // Audit data
   createdAt: string;

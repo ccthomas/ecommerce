@@ -21,6 +21,7 @@ const productSchema = Joi.object({
   id: Joi.string().uuid().optional(),
   name: Joi.string().min(1).required(),
   imageObjectKey: Joi.string().allow(null).optional(),
+  priceLowest: Joi.number().allow(null).optional(),
   createdAt: Joi.alternatives().try(Joi.date().iso(), Joi.string().isoDate()).when('id', {
     is: Joi.exist(), // If 'id' exists
     then: Joi.required(), // 'createdAt' must be required

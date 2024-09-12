@@ -27,7 +27,7 @@ export const connectPsqlClient = async (): Promise<Client> => {
 
     // Manual add params to logger for testing.
     // They are not included by default as password is included.
-    getLogger().debug({ params }, 'Got Parameters!!!');
+    getLogger().debug('Got Parameters!!!');
     const paramsMap = reduceParameters(params.Parameters);
 
     const host = paramsMap[hostKey];

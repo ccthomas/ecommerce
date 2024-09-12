@@ -29,34 +29,39 @@ import SaveIcon from '@mui/icons-material/Save';
 import routeConfigs from '../RoutesConfig';
 import DynamicAppBar from '../components/DynamicAppBar';
 import { useProductContext } from '../contexts/ProductContext';
-import { Product } from '../types/Product';
 import { useInventoryContext } from '../contexts/InventoryContext';
 import DialogComingSoon from '../components/DialogComingSoon';
+import { formatPrice } from '../utils/currencyUtil';
 
 /**
  * This page is a quick hack job to get inventory feature out.
  */
 const InventoryPage = () => {
   const navigate = useNavigate();
-  const { productId } = useParams();
-  const { products } = useProductContext();
+  const { productId } = useParams(); // Assume product id exists. Validation needs to be added.
+  const { product, fetchProductById } = useProductContext();
+
   const {
     inventory, loading, error, fetchInventoryByProductId, saveInventory,
   } = useInventoryContext();
 
-  // We are going to assume for PoC that Product exists.
-  // Error handling will be ignored.
-  const product: Product | undefined = products.find((p: Product) => p.id === productId);
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [name, setName] = useState<string>('Product Inventory');
   const [newItem, setNewItem] = useState({ price: '', quantity: '' });
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
 
   useEffect(() => {
+    fetchProductById(productId!);
     fetchInventoryByProductId(productId!);
   }, [productId]);
+
+  useEffect(() => {
+    if (product !== undefined) {
+      setName(product.name);
+    }
+  }, [product]);
 
   const handleEditProduct = () => {
     navigate(`${routeConfigs.productsEdit.path}?id=${productId}`);
@@ -114,7 +119,7 @@ const InventoryPage = () => {
           <Paper elevation={3} sx={{ padding: 2, mb: 4 }}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Typography variant="h4" gutterBottom>
-                {product!.name}
+                {name}
                 <IconButton onClick={handleEditProduct} color="primary" aria-label="edit">
                   <EditIcon />
                 </IconButton>
@@ -160,8 +165,7 @@ const InventoryPage = () => {
                       <TableRow key={item.id}>
                         <TableCell>
                           <TextField
-                            type="number"
-                            value={item.price}
+                            value={formatPrice(item.price)}
                             disabled
                             variant="outlined"
                             size="small"
@@ -179,8 +183,8 @@ const InventoryPage = () => {
                           />
                         </TableCell>
                         <TableCell>
-                          <IconButton onClick={handleDeleteClick} color="secondary">
-                            <DeleteIcon />
+                          <IconButton aria-label="delete" size="small" onClick={handleDeleteClick}>
+                            <DeleteIcon fontSize="small" />
                           </IconButton>
                         </TableCell>
                       </TableRow>

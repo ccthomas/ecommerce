@@ -52,7 +52,11 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       return response.data.data;
     } catch (e) {
       setLoading(false);
-      setError('Error occurred getting products'); // TODO GET Errro from response.
+      if (e instanceof AxiosError && (e as AxiosError).status === 404) {
+        setError('No Products');
+      } else {
+        setError('Error occurred getting products');
+      }
       return [];
     }
   };
