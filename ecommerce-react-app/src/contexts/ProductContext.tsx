@@ -1,7 +1,7 @@
 import React, {
   createContext, useContext, useState, ReactNode,
 } from 'react';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Product, ProductListResponse } from '../types/Product';
 import { SERVICE_API } from '../constants';
 
@@ -27,6 +27,7 @@ interface ProductContextType {
   fetchProductById: (productId: string) => Promise<void>;
   deleteProductById: (productId: string) => Promise<void>;
   saveProduct: (product: Product | { name: string }) => Promise<boolean>;
+  uploadProductImage: (file: File) => Promise<string | null>;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -49,6 +50,33 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       setLoading(false);
       setError('Error occurred getting product'); // TODO GET Errro from response.
     }
+  };
+
+  const uploadProductImage = async (file: File): Promise<string | null> => {
+    // Get the presigned URL from your endpoint
+    const presignedUrlResponse: AxiosResponse | AxiosError = await axios.get(`${SERVICE_API}/product/signed-url`)
+      .catch((e) => {
+        setError(e);
+        return e;
+      });
+
+    if (presignedUrlResponse instanceof AxiosError) {
+      return null;
+    }
+
+    const { signedUrl, objectKey } = presignedUrlResponse.data;
+
+    // Upload the file to the presigned URL
+    const signedUrlResponse = await axios.put(signedUrl, file).catch((e) => {
+      setError(e);
+      return e;
+    });
+
+    if (signedUrlResponse instanceof AxiosError) {
+      return null;
+    }
+
+    return objectKey;
   };
 
   const saveProduct = async (productToSave: Product | { name: string }): Promise<boolean> => {
@@ -138,6 +166,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       deleteProductById,
       fetchProductById,
       loadMoreProducts,
+      uploadProductImage,
     }}>
       {children}
     </ProductContext.Provider>

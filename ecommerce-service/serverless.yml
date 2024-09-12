@@ -65,6 +65,19 @@ package:
     - 'dist/utils/**'
 
 functions:
+  getPresignedUrl:
+    handler: dist/handlers/GetPresignedUrl.handler
+    timeout: 6
+    environment:
+      LOG_LEVEL: 'debug'
+    package:
+      patterns:
+        - 'dist/handlers/GetPresignedUrl.*'
+    events:
+      - httpApi:
+          method: get
+          path: /product/signed-url
+
   productDelete:
     handler: dist/handlers/ProductDelete.handler
     timeout: 6

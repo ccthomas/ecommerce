@@ -1,6 +1,8 @@
 export type Product = {
   id: string;
   name: string;
+  imageObjectKey: string | null,
+  imageUrl: string | null;
   inventory?: Inventory[];
   createdAt: string;
   updatedAt: string;

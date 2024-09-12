@@ -9,6 +9,7 @@ import { connectPsqlClient } from '../utils/PostgresUtil';
 import { httpError } from '../middleware/ApiMiddleware';
 import { validateApiEvent } from '../middleware/ValidateMiddleware';
 import { ApiError } from '../models/ApiError';
+import { getObjectUrl } from '../utils/S3Util';
 
 const pathParamSchema = Joi.object({
   productId: Joi.string().uuid().required(),
@@ -24,10 +25,11 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
   getLogger().debug({
     productId,
   }, 'Query for product by id.');
-  const result: QueryResult<IProduct[]> = await client.query(`
+  const result: QueryResult<IProduct> = await client.query(`
     SELECT
       id,
       name,
+      image_object_key AS "imageObjectKey",
       created_at AS "createdAt",
       updated_at AS "updatedAt",
       deleted_at AS "deletedAt"
@@ -50,9 +52,14 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
     });
   }
 
+  const product = result.rows[0];
+
   return {
     statusCode: 200,
-    body: JSON.stringify(result.rows[0]),
+    body: JSON.stringify({
+      ...product,
+      imageUrl: getObjectUrl(product.imageObjectKey),
+    }),
     headers: {
       'Content-Type': 'application/json',
     },

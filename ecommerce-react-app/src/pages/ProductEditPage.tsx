@@ -37,15 +37,15 @@ const ProductForm: React.FC<ProductFormProps> = () => {
     product,
     fetchProductById,
     saveProduct,
+    uploadProductImage,
     loading,
     error,
   } = useProductContext();
 
   const [name, setName] = useState<string>(product?.name || '');
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [imageUrl] = useState<string | null>(product?.imageUrl || null);
   const [showSnackbar, setShowSnackbar] = useState(false);
-  console.log(image);
 
   useEffect(() => {
     if (id) {
@@ -62,13 +62,22 @@ const ProductForm: React.FC<ProductFormProps> = () => {
     const file = event.target.files?.[0];
     if (file) {
       setImage(file);
-      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async () => {
+    let objectKey: string | null = product?.imageObjectKey || null;
+    if (image !== null) {
+      objectKey = await uploadProductImage(image);
+      if (objectKey === null) {
+        return;
+      }
+    }
+
     const isSuccess = await saveProduct({
       ...product,
+      imageUrl: undefined,
+      imageObjectKey: objectKey,
       name,
     });
 
@@ -83,6 +92,11 @@ const ProductForm: React.FC<ProductFormProps> = () => {
   const handleSnackbarClose = () => {
     setShowSnackbar(false);
   };
+
+  let previewImage = image !== null ? URL.createObjectURL(image) : '';
+  if (previewImage === '' && imageUrl !== null) {
+    previewImage = imageUrl;
+  }
 
   return (
     <>
@@ -140,10 +154,10 @@ const ProductForm: React.FC<ProductFormProps> = () => {
                   </Button>
                 </label>
 
-                {imagePreview && (
+                {previewImage && (
                   <Box
                     component="img"
-                    src={imagePreview}
+                    src={previewImage}
                     alt="Product Preview"
                     sx={{
                       width: 200, height: 200, objectFit: 'cover', mb: 2,

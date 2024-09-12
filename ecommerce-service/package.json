@@ -48,6 +48,8 @@
     "typescript-eslint": "^7.6.0"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.650.0",
+    "@aws-sdk/s3-request-presigner": "^3.650.0",
     "@middy/core": "^v4.7.0",
     "joi": "^17.12.3",
     "pg": "^8.11.5",

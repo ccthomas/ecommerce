@@ -198,6 +198,7 @@ const ProductTable: React.FC = () => {
                       <ProductCard
                         id={product.id}
                         title={product.name}
+                        imageUrl={product.imageUrl}
                         canEdit={canEdit}
                         canDelete={canDelete}
                         onDeleteClick={handleDeleteClick} // Pass the click handler

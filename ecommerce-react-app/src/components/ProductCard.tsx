@@ -14,7 +14,7 @@ import routeConfigs from '../RoutesConfig';
 export type ProductCardProps = {
   id: string,
   title: string;
-  imageUrl?: string | undefined;
+  imageUrl: string | null;
   canEdit?: boolean;
   canDelete?: boolean;
   onDeleteClick?: () => void;
@@ -35,7 +35,7 @@ export default function ProductCard({
         <CardMedia
           component="img"
           height="140"
-          image={imageUrl}
+          image={imageUrl === null ? undefined : imageUrl}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

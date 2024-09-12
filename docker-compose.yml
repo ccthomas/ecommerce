@@ -7,6 +7,7 @@ services:
       - "4510:4510" # LocalStack metrics port (optional)
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - SERVICES=s3,ssm
     volumes:
       - localstack_data:/var/lib/localstack
     networks:

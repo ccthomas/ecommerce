@@ -8,13 +8,14 @@ import { getLogger } from '../utils/LoggerUtil';
 import { connectPsqlClient } from '../utils/PostgresUtil';
 import { httpError } from '../middleware/ApiMiddleware';
 import { validateApiEvent } from '../middleware/ValidateMiddleware';
+import { getObjectUrl } from '../utils/S3Util';
 
 const queryParamsSchema = Joi.object({
   page: Joi.number().min(1).optional(),
   page_size: Joi.number().min(1).optional(),
   name: Joi.string().optional(),
-  sort_by: Joi.string().allow('name', 'created_at', 'updated_at').optional(),
-  sort: Joi.string().allow('asc', 'desc', 'ASC', 'DESC').optional(),
+  sort_by: Joi.string().valid('name', 'created_at', 'updated_at').optional(),
+  sort: Joi.string().valid('asc', 'desc', 'ASC', 'DESC').optional(),
 }).allow(null).optional();
 
 const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -38,10 +39,11 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
     sortBy,
     sortOrder,
   }, 'Query for products');
-  const result: QueryResult<IProduct[]> = await client.query(`
+  const result: QueryResult<IProduct> = await client.query(`
     SELECT
       id,
       name,
+      image_object_key AS "imageObjectKey",
       created_at AS "createdAt",
       updated_at AS "updatedAt",
       deleted_at AS "deletedAt"
@@ -78,6 +80,11 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
   getLogger().debug({ rows: totalCountResult.rows }, 'Total count found.');
   const totalCount = parseInt(totalCountResult.rows[0].count, 10);
 
+  const data = result.rows.map((product: IProduct) => ({
+    ...product,
+    imageUrl: getObjectUrl(product.imageObjectKey),
+  }));
+
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -96,7 +103,7 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
       query: {
         name: nameFilter || undefined,
       },
-      data: result.rows,
+      data,
     }),
     headers: {
       'Content-Type': 'application/json',
