@@ -66,6 +66,12 @@ There are three levels of ownership with this baseline ecommerce application:
 
 ## Ecommerce Relational Diagram
 
+* Focus on models is to gete core information for a PoC.
+    * Eexample of "fluff" fields which are not required for a working PoC include.
+        * SKU
+        * Quality of Item (for used items)
+        * Description
+
 ```mermaid
 erDiagram
     PRODUCT ||--o{ INVENTORY : has
@@ -76,13 +82,12 @@ erDiagram
     PRODUCT {
         string id
         string name
+        string image_object_key
     }
 
     INVENTORY {
         string id
         string product_id
-        string owner
-        string quality
         numeric price
         numeric quantity
     }
@@ -140,6 +145,7 @@ sequenceDiagram
     {
         "name": "Chair",
         "id": "UUID",
+        "imageObjectKey": "uuid or null",
         "createdAt": "YYYY-MM-DDTHH:MM:SS.sssZ",
         "updatedAt": "YYYY-MM-DDTHH:MM:SS.sssZ",
         "deletedAt": null or "YYYY-MM-DDTHH:MM:SS.sssZ"
@@ -161,6 +167,7 @@ TODO Document other endpoints.
         {
             "id": "OPTIONAL - provide to update existing.",
             "name": "REQUIRED",
+            "imageObjectKey": "uuid or null",
             "createdAt": "ISO-TIMESTAMP",
             "updatedAt": "ISO-TIMESTAMP",
             "deletedAt": "null or ISO-TIMESTAMP"
@@ -173,13 +180,14 @@ TODO Document other endpoints.
         {
             "id": "OPTIONAL - provide to update existing.",
             "name": "REQUIRED",
+            "imageObjectKey": "uuid or null",
             "createdAt": "ISO-TIMESTAMP",
             "updatedAt": "ISO-TIMESTAMP",
             "deletedAt": "null or ISO-TIMESTAMP"
         }
         ```
 
-        On Failure: 400
+        On Failure: 400 (This payload is outdated)
         ```json
         {
           "message": "<Message for user on why an error occured.>",
@@ -187,7 +195,7 @@ TODO Document other endpoints.
         }
         ```
 
-        On Failure: 500
+        On Failure: 500 (This payload is outdated)
         ```json
         {
           "message": "Internal Server Error.",
@@ -230,6 +238,8 @@ TODO Document other endpoints.
                 {
                     "id": "",
                     "name": "",
+                    "imageObjectKey": "uuid or null",
+                    "imageUrl": "url or null",
                     "createdAt": "ISO-TIMESTAMP",
                     "updatedAt": "ISO-TIMESTAMP"
                 }
@@ -237,7 +247,7 @@ TODO Document other endpoints.
         }
         ```
 
-        On Failure: 400
+        On Failure: 400 (This payload is outdated)
         ```json
         {
           "message": "<Message for user on why an error occured.>",
@@ -245,7 +255,7 @@ TODO Document other endpoints.
         }
         ```
 
-        On Failure: 500
+        On Failure: 500 (This payload is outdated)
         ```json
         {
           "message": "Internal Server Error.",

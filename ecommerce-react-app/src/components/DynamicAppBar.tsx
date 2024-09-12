@@ -13,10 +13,10 @@ export type DynamicAppBarProps = {
   items?: { route: string; label: string }[]
 };
 
-function DynamicAppBar({
-  title = 'Virtual Gamers',
+const DynamicAppBar = ({
+  title = 'E-Commerce',
   items = [],
-}: DynamicAppBarProps) {
+}: DynamicAppBarProps) => {
   const navigate = useNavigate();
 
   return (
@@ -58,5 +58,6 @@ function DynamicAppBar({
       </Container>
     </AppBar>
   );
-}
+};
+
 export default DynamicAppBar;

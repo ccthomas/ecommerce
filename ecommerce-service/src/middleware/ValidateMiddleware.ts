@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 import middy from '@middy/core';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { getLogger } from '../utils/LoggerUtil';
-import { ApiError } from '../models/ApiError';
+import { ApiError } from '../models/error/ApiError';
 
 /**
  * Validate Api Event.

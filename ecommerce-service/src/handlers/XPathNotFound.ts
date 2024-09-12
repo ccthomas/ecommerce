@@ -1,7 +1,7 @@
 import middy from '@middy/core';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { httpError } from '../middleware/ApiMiddleware';
-import { ApiError } from '../models/ApiError';
+import { ApiError } from '../models/error/ApiError';
 import { getLogger } from '../utils/LoggerUtil';
 import { configureLogger } from '../middleware/LoggerMiddleware';
 

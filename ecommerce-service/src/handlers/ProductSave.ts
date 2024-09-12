@@ -9,7 +9,7 @@ import { configureLogger } from '../middleware/LoggerMiddleware';
 import { connectPsqlClient } from '../utils/PostgresUtil';
 import { validateApiEvent } from '../middleware/ValidateMiddleware';
 import { httpError } from '../middleware/ApiMiddleware';
-import { ApiError } from '../models/ApiError';
+import { ApiError } from '../models/error/ApiError';
 
 type IProductDTO = IProduct & {
   createdAt?: Date | string;
@@ -20,6 +20,7 @@ type IProductDTO = IProduct & {
 const productSchema = Joi.object({
   id: Joi.string().uuid().optional(),
   name: Joi.string().min(1).required(),
+  imageObjectKey: Joi.string().allow(null).optional(),
   createdAt: Joi.alternatives().try(Joi.date().iso(), Joi.string().isoDate()).when('id', {
     is: Joi.exist(), // If 'id' exists
     then: Joi.required(), // 'createdAt' must be required
@@ -64,25 +65,28 @@ const lambdaHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRes
     INSERT INTO product.product (
       id,
       name,
+      image_object_key,
       created_at,
       updated_at,
       deleted_at
     )
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES ($1, $2, $3, $4, $5, $6)
     ON CONFLICT ON CONSTRAINT product_pkey DO UPDATE
     SET
       name = EXCLUDED.name,
+      image_object_key = EXCLUDED.image_object_key,
       created_at = EXCLUDED.created_at,
       updated_at = EXCLUDED.updated_at,
       deleted_at = EXCLUDED.deleted_at
     WHERE
-      product.created_at = $3
+      product.created_at = $4
     AND
-      product.updated_at = $6
+      product.updated_at = $7
     RETURNING id;
     `, [
       product.id,
       product.name,
+      product.imageObjectKey || null,
       product.createdAt,
       product.updatedAt,
       product.deletedAt,

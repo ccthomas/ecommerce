@@ -1,17 +1,13 @@
 export type Product = {
   id: string;
   name: string;
-  inventory?: Inventory[];
+  imageObjectKey: string | null,
+  imageUrl: string | null;
+
+  // Audit data
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
-};
-
-export type Inventory = {
-  id: string;
-  price: number;
-  quanity: number;
-  owner: string;
 };
 
 // Define the type for pagination details

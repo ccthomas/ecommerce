@@ -24,32 +24,27 @@ import routeConfigs from '../RoutesConfig';
  * use a form that grabs the value of the text field on submit.
  */
 
-interface ProductFormProps {
-  // This prop can be used to prepopulate the form when editing
-  product?: { name: string; imageUrl?: string };
-}
-
-const ProductForm: React.FC<ProductFormProps> = () => {
+const ProductForm = () => {
+  const navigate = useNavigate();
   const [params] = useSearchParams(); // Use for editing an existing product
   const id = params.get('id');
-  const navigate = useNavigate();
+
   const {
     product,
     fetchProductById,
     saveProduct,
+    uploadProductImage,
     loading,
     error,
   } = useProductContext();
 
   const [name, setName] = useState<string>(product?.name || '');
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [imageUrl] = useState<string | null>(product?.imageUrl || null);
   const [showSnackbar, setShowSnackbar] = useState(false);
-  console.log(image);
 
   useEffect(() => {
     if (id) {
-      // Fetch the product details if in edit mode
       fetchProductById(id);
     }
   }, [id]);
@@ -62,13 +57,22 @@ const ProductForm: React.FC<ProductFormProps> = () => {
     const file = event.target.files?.[0];
     if (file) {
       setImage(file);
-      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async () => {
+    let objectKey: string | null = product?.imageObjectKey || null;
+    if (image !== null) {
+      objectKey = await uploadProductImage(image);
+      if (objectKey === null) {
+        return;
+      }
+    }
+
     const isSuccess = await saveProduct({
       ...product,
+      imageUrl: undefined,
+      imageObjectKey: objectKey,
       name,
     });
 
@@ -84,10 +88,14 @@ const ProductForm: React.FC<ProductFormProps> = () => {
     setShowSnackbar(false);
   };
 
+  let previewImage = image !== null ? URL.createObjectURL(image) : '';
+  if (previewImage === '' && imageUrl !== null) {
+    previewImage = imageUrl;
+  }
+
   return (
     <>
       <DynamicAppBar
-        title='E-Commerce'
         items={[
           {
             label: 'Products',
@@ -140,10 +148,10 @@ const ProductForm: React.FC<ProductFormProps> = () => {
                   </Button>
                 </label>
 
-                {imagePreview && (
+                {previewImage && (
                   <Box
                     component="img"
-                    src={imagePreview}
+                    src={previewImage}
                     alt="Product Preview"
                     sx={{
                       width: 200, height: 200, objectFit: 'cover', mb: 2,

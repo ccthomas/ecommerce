@@ -11,7 +11,6 @@ const HomePage: React.FC = () => {
   return (
     <>
       <DynamicAppBar
-        title='E-Commerce'
         items={[
           {
             label: 'Products',
@@ -20,10 +19,9 @@ const HomePage: React.FC = () => {
         ]}
       />
       <Container>
-        {/* Hero Section */}
         <Box>
           <Typography variant="h2" gutterBottom>
-            Placeholder
+            Basic Welcome Page for navigating to parts of the PoC.
           </Typography>
           <Button variant="contained" color="primary" onClick={() => { navigate(routeConfigs.products.path); }}>
             Products Page
